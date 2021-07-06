@@ -1,0 +1,9 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+    <ListPreference
+        app:defaultValue="Test"
+        app:entries="@array/hostel_entries"
+        app:entryValues="@array/hostel_values"
+        app:key="hostel"
+        app:title="@string/hostel"
+        app:useSimpleSummaryProvider="true" />
+</PreferenceScreen>
