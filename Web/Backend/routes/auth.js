@@ -1,22 +1,41 @@
 const express = require("express");
 const router = express.Router();
-const { check } = require("express-validator");
+const { body } = require("express-validator");
+const passwordValidator = require("password-validator");
 const { login, logout, register } = require("../controllers/auth");
+
+const schema = new passwordValidator()
+  .is()
+  .min(8)
+  .is()
+  .max(20)
+  .has()
+  .letters()
+  .has()
+  .digits()
+  .has()
+  .symbols()
+  .has()
+  .not()
+  .spaces();
 
 router.post(
   "/register",
-  check("name").notEmpty().withMessage("Name is required"),
-  check("email").isEmail().withMessage("Invalid value for E-Mail ID"),
-  check("password")
-    .isLength({ min: 8 })
-    .withMessage("Password should be at least 8 characters"),
+  body("name").notEmpty().withMessage("Name is required"),
+  body("email")
+    .normalizeEmail()
+    .isEmail()
+    .withMessage("Invalid value for E-Mail ID"),
+  body("password")
+    .custom((val) => schema.validate(val))
+    .withMessage("Password Guidelines"),
   register
 );
 
 router.post(
   "/login",
-  check("email").isEmail().withMessage("Invalid value for E-Mail ID"),
-  check("password").notEmpty().withMessage("Password is required"),
+  body("email").normalizeEmail().isEmail().withMessage("Invalid value for E-Mail ID"),
+  body("password").notEmpty().withMessage("Password is required"),
   login
 );
 

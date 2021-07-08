@@ -10,14 +10,14 @@ const adminSchema = new mongoose.Schema({
 });
 
 var userSchema = new mongoose.Schema({
-  rollNo: { type: String, required: true, trim: true, unique: true },
-  token: { type: String, required: true },
-  attendance: [
-    {
-      date: { type: Date, default: Date.now },
-      present: Boolean,
-    },
-  ],
+  rollNo: { type: String, required: true, unique: true },
+  uid: { type: String, required: true, unique: true },
+  hostel: {
+    type: String,
+    enum: ["BH1", "BH2", "BH3", "GH", "Test"],
+    required: true,
+  },
+  attendance: [{ date: Date, present: Boolean }],
 });
 
 adminSchema

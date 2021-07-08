@@ -19,7 +19,7 @@ exports.register = (req, res) => {
   } else {
     let msg = "";
     err.forEach((er) => (msg = msg + "\n" + er.msg));
-    return res.status(422).json({ error: msg });
+    return res.status(422).json({ error: msg.trim() });
   }
 };
 
@@ -46,7 +46,7 @@ exports.login = (req, res) => {
   } else {
     let msg = "";
     err.forEach((er) => (msg = msg + "\n" + er.msg));
-    return res.status(422).json({ error: msg });
+    return res.status(422).json({ error: msg.trim() });
   }
 };
 

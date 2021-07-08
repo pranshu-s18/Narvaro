@@ -1,13 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const { check } = require("express-validator");
-const { register } = require("../controllers/user");
+const { register, markAttendance } = require("../controllers/user");
 
-router.post(
-  "/register",
-  check("email").isEmail().withMessage("Invalid value for E-Mail ID"),
-  check("token").notEmpty().withMessage("Token is required"),
-  register
-);
+router.post("/register", register);
+router.post("/attendance", markAttendance);
 
 module.exports = router;
