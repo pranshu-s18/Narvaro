@@ -16,6 +16,15 @@ export const auth = (data, next) => {
   }
 };
 
+export const registerAPI = (user) =>
+  fetch(`${API}/register`, {
+    method: "POST",
+    headers: { Accept: "application/json", "Content-Type": "application/json" },
+    body: JSON.stringify(user),
+  })
+    .then((res) => res.json())
+    .catch((e) => console.log(e));
+
 export const isAuthenticated = () => {
   if (typeof window == "undefined") return false;
   else
