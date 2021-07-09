@@ -1,0 +1,9 @@
+body {
+    background: #343a40;
+    min-height: 100vh;
+}
+
+.nav-link:hover,
+.nav-link:focus {
+    border-color: transparent !important;
+}

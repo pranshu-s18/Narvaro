@@ -1,6 +1,8 @@
 import React, { useState } from "react";
-import { Error, Loading } from "../core/Commons";
+import { Redirect } from "react-router-dom";
+import { Error, FormInputDiv } from "../core/Commons";
 import { loginAPI, auth } from "./helper";
+import Base from "../core/Base";
 
 const Login = () => {
   const [values, setValues] = useState({ email: "", password: "" });

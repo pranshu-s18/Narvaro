@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { registerAPI } from "./helper";
-import { Success, Error, FormInputDiv } from "../Commons";
+import { Success, Error, FormInputDiv } from "../core/Commons";
 import Base from "../core/Base";
 
 const Register = () => {
@@ -42,7 +42,7 @@ const Register = () => {
               id="name"
               val={name}
               focus={true}
-              onChange={handleChange("firstName")}
+              onChange={handleChange("name")}
               text="Name"
             />
             <FormInputDiv

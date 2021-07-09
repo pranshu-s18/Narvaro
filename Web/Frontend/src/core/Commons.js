@@ -14,15 +14,6 @@ export const Error = ({ error }) =>
     </div>
   );
 
-export const Loading = ({ loading }) =>
-  loading && (
-    <div className="row mt-4 text-center">
-      <div className="col-md-6 offset-sm-3 alert-info rounded py-2">
-        <h2>Loading...</h2>
-      </div>
-    </div>
-  );
-
 export const Success = ({ success, text, extraText = "" }) =>
   success && (
     <div className="row mt-3 text-center">

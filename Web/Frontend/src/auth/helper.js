@@ -10,10 +10,9 @@ export const loginAPI = (user) =>
     .catch((e) => console.log(e));
 
 export const auth = (data, next) => {
-  if (typeof window !== "undefined") {
+  if (typeof window !== "undefined")
     localStorage.setItem("jwt", JSON.stringify(data));
-    next();
-  }
+  next();
 };
 
 export const registerAPI = (user) =>
