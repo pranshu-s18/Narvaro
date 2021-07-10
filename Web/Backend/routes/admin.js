@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { isLoggedIn, isAuthenticated } = require("../controllers/auth");
-const { getUserByID, getAttendance } = require("../controllers/admin");
+const { getUserByID, attendanceForCurrentWeek } = require("../controllers/admin");
 const { body } = require("express-validator");
 
 router.param("userID", getUserByID);
@@ -12,7 +12,7 @@ router.post(
     .withMessage("Invalid value for Hostel"),
   isLoggedIn,
   isAuthenticated,
-  getAttendance
+  attendanceForCurrentWeek
 );
 
 module.exports = router;

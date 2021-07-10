@@ -9,16 +9,19 @@ const adminSchema = new mongoose.Schema({
   salt: String,
 });
 
-var userSchema = new mongoose.Schema({
-  rollNo: { type: String, required: true, unique: true },
-  uid: { type: String, required: true, unique: true },
-  hostel: {
-    type: String,
-    enum: ["BH1", "BH2", "BH3", "GH", "Test"],
-    required: true,
+var userSchema = new mongoose.Schema(
+  {
+    rollNo: { type: String, required: true, unique: true },
+    uid: { type: String, required: true, unique: true },
+    hostel: {
+      type: String,
+      enum: ["BH1", "BH2", "BH3", "GH", "Test"],
+      required: true,
+    },
+    attendance: [{ _id: false, date: Date, present: Boolean }],
   },
-  attendance: [{ date: Date, present: Boolean }],
-});
+  { timestamps: { createdAt: false, updatedAt: true } }
+);
 
 adminSchema
   .virtual("password")
