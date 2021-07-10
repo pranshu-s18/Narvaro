@@ -7,3 +7,6 @@ body {
 .nav-link:focus {
     border-color: transparent !important;
 }
+.spaced-table td {
+    padding: 0.35rem 0;
+}

@@ -27,7 +27,7 @@ const Login = () => {
   };
 
   const redirect = () => {
-    if (success) return <Redirect to="/attendance/test" />;
+    if (success) return <Redirect to="/attendance" />;
   };
 
   return (

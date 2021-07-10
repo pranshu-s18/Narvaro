@@ -16,19 +16,20 @@ const navItem = (history, goto, name) => (
 const Navbar = ({ history }) => (
   <div>
     <ul className="nav nav-tabs bg-dark">
-      {!isAuthenticated() && (
+      {isAuthenticated() ? (
+        <>
+          {navItem(history, "/attendance", "Attendance")}
+          <li className="nav-item" onClick={logout}>
+            <Link className="nav-link text-warning p-3" to="/">
+              Logout
+            </Link>
+          </li>
+        </>
+      ) : (
         <>
           {navItem(history, "/", "Login")}
           {navItem(history, "/register", "Register")}
         </>
-      )}
-      {isAuthenticated() && navItem(history, "/attendance", "Attendance")}
-      {isAuthenticated() && (
-        <li className="nav-item" onClick={logout}>
-          <Link className="nav-link text-warning p-3" to="/">
-            Logout
-          </Link>
-        </li>
       )}
     </ul>
   </div>

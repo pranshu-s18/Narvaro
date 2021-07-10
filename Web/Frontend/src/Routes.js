@@ -18,7 +18,7 @@ const NonLoginRoute = ({ component: Component, ...rest }) => (
   <Route
     {...rest}
     render={(props) =>
-      !isAuthenticated() ? <Component {...props} /> : <Redirect to="/attendance/test" />
+      !isAuthenticated() ? <Component {...props} /> : <Redirect to="/attendance" />
     }
   />
 );
@@ -29,7 +29,7 @@ const Routes = () => {
       <Switch>
         <NonLoginRoute path="/" component={Login} exact />
         <NonLoginRoute path="/register" component={Register} exact />
-        <LoginRoute path="/attendance/:hostel" component={Attendance} exact />
+        <LoginRoute path="/attendance" component={Attendance} exact />
       </Switch>
     </BrowserRouter>
   );

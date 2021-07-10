@@ -1,4 +1,3 @@
-import moment from "moment";
 import React from "react";
 import Navbar from "./Navbar";
 
@@ -10,7 +9,7 @@ const Base = ({ className = "text-white py-4", children }) => (
     </div>
     <footer className="bg-dark text-white text-lg-start mt-auto">
       <div className="text-center p-3" style={{ backgroundColor: "#1f2326" }}>
-        Copyright &copy; {moment().format("YYYY")} Pranshu Saxena
+        Developed by Pranshu Saxena
       </div>
     </footer>
   </div>
