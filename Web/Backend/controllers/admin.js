@@ -26,7 +26,7 @@ exports.attendanceForCurrentWeek = (req, res) => {
         {
           $match: {
             hostel: req.body.hostel,
-            "attendance.date": {
+            "attendance": {
               $gte: moment().startOf("week").toDate(),
               $lt: moment().endOf("week").toDate(),
             },
@@ -42,8 +42,8 @@ exports.attendanceForCurrentWeek = (req, res) => {
                 as: "att",
                 cond: {
                   $and: [
-                    { $gte: ["$$att.date", moment().startOf("week").toDate()] },
-                    { $lt: ["$$att.date", moment().endOf("week").toDate()] },
+                    { $gte: ["$$att", moment().startOf("week").toDate()] },
+                    { $lt: ["$$att", moment().endOf("week").toDate()] },
                   ],
                 },
               },

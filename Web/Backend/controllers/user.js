@@ -12,26 +12,26 @@ exports.register = (req, res) =>
   });
 
 exports.markAttendance = (req, res) =>
-  User.findOne(req.body, (e, user) => {
-    if (e) {
-      console.log(e);
-      return res.status(500).json({ error: "Unable to mark attendance" });
-    } else {
-      if (moment(user.updatedAt).day === moment().day)
+  User.findOneAndUpdate(
+    {
+      ...req.body,
+      lastUpdate: { $ne: moment().startOf("day").toDate() },
+    },
+    {
+      $push: { attendance: Date.now() },
+      $set: { lastUpdate: moment().startOf("day").toDate() },
+    },
+    (e, user) => {
+      if (e) {
+        console.log(e);
+        return res.status(500).json({ error: "Unable to mark attendance" });
+      } else if (!user)
         return res
           .status(400)
-          .json({ error: "Attendance has already been marked for Today" });
-      else {
-        user.attendance.push({ date: Date.now(), present: true });
-        user.save((err, newUser) => {
-          if (err) {
-            console.log(err);
-            return res.status(500).json({ error: "Unable to mark attendance" });
-          } else
-            return res
-              .status(200)
-              .json({ message: "Attendance marked successfully" });
-        });
-      }
+          .json({ error: "Attendance already marked for Today" });
+      else
+        return res
+          .status(200)
+          .json({ message: "Attendance marked successfully" });
     }
-  });
+  );
