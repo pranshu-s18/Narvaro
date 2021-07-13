@@ -30,7 +30,7 @@ const Attendance = () => {
 
   const attRender = (data) => {
     let ar = [false, false, false, false, false, false, false];
-    data.forEach((el) => (ar[moment(el.date).day() - 1] = moment(el.date)));
+    data.forEach((el) => (ar[moment(el).day() - 1] = moment(el)));
 
     return ar.map((el, i) => {
       if (i >= moment().day()) return <td key={i}>-</td>;
@@ -47,6 +47,7 @@ const Attendance = () => {
         <table className="table table-responsive text-white text-center">
           <thead>
             <tr>
+              {console.log(attendance)}
               <th>Roll No</th>
               {dateList.map((date, id) => (
                 <th key={id}>{moment(date).format("DD MMM")}</th>
