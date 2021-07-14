@@ -17,40 +17,51 @@ exports.getUserByID = (req, res, next, id) =>
     next();
   });
 
-exports.attendanceForCurrentWeek = (req, res) => {
+exports.attendance = (req, res) => {
   const err = validationResult(req).array();
 
   if (err.length === 0) {
+    const query = req.body.hostel
+      ? {
+          start: moment().startOf("week").toDate(),
+          end: moment().endOf("week").toDate(),
+          project: { rollNo: 1 },
+          sort: { rollNo: 1 },
+        }
+      : {
+          start: moment().startOf("month").toDate(),
+          end: moment().endOf("month").toDate(),
+          project: { hostel: 1 },
+          sort: { attendance: -1 },
+        };
+
     User.aggregate(
       [
         {
           $match: {
-            hostel: req.body.hostel,
-            "attendance": {
-              $gte: moment().startOf("week").toDate(),
-              $lt: moment().endOf("week").toDate(),
-            },
+            ...req.body,
+            attendance: { $gte: query.start, $lt: query.end },
           },
         },
         {
           $project: {
             _id: 0,
-            rollNo: 1,
+            ...query.project,
             attendance: {
               $filter: {
                 input: "$attendance",
                 as: "att",
                 cond: {
                   $and: [
-                    { $gte: ["$$att", moment().startOf("week").toDate()] },
-                    { $lt: ["$$att", moment().endOf("week").toDate()] },
+                    { $gte: ["$$att", query.start] },
+                    { $lt: ["$$att", query.end] },
                   ],
                 },
               },
             },
           },
         },
-        { $sort: { rollNo: 1 } },
+        { $sort: query.sort },
       ],
       (e, data) => {
         if (e) {
