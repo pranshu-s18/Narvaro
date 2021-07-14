@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { attendanceAPI, isAuthenticated } from "../auth/helper";
-import Base from "./Base";
+import Base from "../core/Base";
 
 import moment from "moment";
 import "moment/locale/en-in";
@@ -20,7 +20,7 @@ const Attendance = () => {
   const [dateList, setDateList] = useState([]);
 
   useEffect(() => {
-    attendanceAPI({ id: user._id, token, hostel }).then((data) => {
+    attendanceAPI(user._id, token, JSON.stringify({ hostel })).then((data) => {
       if (data.error) console.log(data.error);
       else setAttendance(data);
     });
@@ -29,16 +29,16 @@ const Attendance = () => {
   }, []);
 
   const attRender = (data) => {
-    let ar = [false, false, false, false, false, false, false];
-    data.forEach((el) => (ar[moment(el).day() - 1] = moment(el)));
+    if (data) {
+      let ar = new Array(7).fill(false);
+      data.forEach((el) => (ar[moment(el).day() - 1] = moment(el)));
 
-    return ar.map((el, i) => {
-      if (i >= moment().day()) return <td key={i}>-</td>;
-      else {
-        if (el) return <td key={i}>{el.format("hh:mm A")}</td>;
-        else return <td key={i}>A</td>;
-      }
-    });
+      return ar.map((el, i) => (
+        <td key={i}>
+          {i >= moment().day ? "-" : el ? el.format("hh:mm A") : "A"}
+        </td>
+      ));
+    } else return <td>Loading...</td>
   };
 
   return (
@@ -47,7 +47,6 @@ const Attendance = () => {
         <table className="table table-responsive text-white text-center">
           <thead>
             <tr>
-              {console.log(attendance)}
               <th>Roll No</th>
               {dateList.map((date, id) => (
                 <th key={id}>{moment(date).format("DD MMM")}</th>

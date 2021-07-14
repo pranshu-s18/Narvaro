@@ -3,7 +3,8 @@ import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
 import { isAuthenticated } from "./auth/helper";
 import Login from "./auth/Login";
 import Register from "./auth/Register";
-import Attendance from "./core/Attendance";
+import Attendance from "./attendance/Attendance";
+import StudentAttendance from "./attendance/StudentAttendance";
 
 const LoginRoute = ({ component: Component, ...rest }) => (
   <Route
@@ -18,7 +19,11 @@ const NonLoginRoute = ({ component: Component, ...rest }) => (
   <Route
     {...rest}
     render={(props) =>
-      !isAuthenticated() ? <Component {...props} /> : <Redirect to="/attendance" />
+      !isAuthenticated() ? (
+        <Component {...props} />
+      ) : (
+        <Redirect to="/attendance" />
+      )
     }
   />
 );
@@ -30,6 +35,11 @@ const Routes = () => {
         <NonLoginRoute path="/" component={Login} exact />
         <NonLoginRoute path="/register" component={Register} exact />
         <LoginRoute path="/attendance" component={Attendance} exact />
+        <LoginRoute
+          path="/attendance/:rollNo"
+          component={StudentAttendance}
+          exact
+        />
       </Switch>
     </BrowserRouter>
   );

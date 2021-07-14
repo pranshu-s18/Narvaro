@@ -24,7 +24,7 @@ export const registerAPI = (user) =>
     .then((res) => res.json())
     .catch((e) => console.log(e));
 
-export const attendanceAPI = ({ id, token, hostel }) =>
+export const attendanceAPI = (id, token, data) =>
   fetch(`${API}/attendance/${id}`, {
     method: "POST",
     headers: {
@@ -32,7 +32,7 @@ export const attendanceAPI = ({ id, token, hostel }) =>
       Accept: "application/json",
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ hostel }),
+    body: data,
   })
     .then((res) => res.json())
     .catch((e) => console.log(e));
