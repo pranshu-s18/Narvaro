@@ -2,97 +2,68 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { attendanceAPI, isAuthenticated } from "../auth/helper";
 import Base from "./Base";
+import { attCell, dates, TableBody, TableHead } from "./Commons";
+import "../css/table.css";
 
 import moment from "moment";
 import "moment/locale/en-in";
 moment.updateLocale("en-in", { week: { dow: 1 } });
 
-const dates = (duration) => {
-  const start = moment().startOf(duration);
-  const list = [start.toDate()];
-  while (start.isBefore(moment().endOf(duration), "date"))
-    list.push(start.add(1, "day").toDate());
-  return list;
-};
-
 const Attendance = () => {
   const { user, token } = isAuthenticated();
   const [attendance, setAttendance] = useState([]);
-  const [hostel, setHostel] = useState("BH2");
   const [dateList, setDateList] = useState([]);
-  const { rollNo } = useParams();
+  const { hostel } = useParams();
 
   useEffect(() => {
-    let data = rollNo ? JSON.stringify({ rollNo }) : JSON.stringify({ hostel });
-    attendanceAPI(user._id, token, data).then((res) => {
-      if (res.error) console.log(res.error);
-      else setAttendance(rollNo ? res[0] : res);
-    });
-
-    setDateList(dates(rollNo ? "month" : "week"));
+    setDateList(dates("week"));
   }, []);
 
-  const attRender = (data) => {
-    if (data) {
-      let ar = new Array(dateList.length).fill(false);
-      data.forEach((el) => {
-        ar[(rollNo ? moment(el).date() : moment(el).day()) - 1] = moment(el);
-      });
+  useEffect(() => {
+    attendanceAPI(user._id, token, JSON.stringify({ hostel })).then((res) => {
+      if (res.error) {
+        console.log(res.error);
+        setAttendance([]);
+      } else setAttendance(res);
+    });
+  }, [hostel]);
 
-      const text = (date, el, i) =>
-        i >= date ? "-" : el ? el.format("hh:mm A") : "A";
+  const attRender = () => {
+    if (attendance) {
+      let ar = new Array(7).fill(false);
+      attendance.forEach((el) => (ar[moment(el).day() - 1] = moment(el)));
 
-      return ar.map((el, i) =>
-        rollNo ? (
-          <tr key={i}>
-            <td>{moment(dateList[i]).format("DD MMM")}</td>
-            <td>{text(moment().date(), el, i)}</td>
-          </tr>
-        ) : (
-          <td key={i}>{text(moment().day(), el, i)}</td>
-        )
-      );
+      return ar.map((el, i) => attCell("week", el, i));
     } else
-      return rollNo ? (
-        <tr>
-          <td>Loading...</td>
-        </tr>
-      ) : (
-        <td>Loading...</td>
+      return (
+        <td colSpan={7} className="text-center text-info">
+          Loading...
+        </td>
       );
   };
 
-  const tableHeading = () =>
-    rollNo ? (
-      <tr>
-        <th>{rollNo}</th>
-        <th>{attendance.hostel}</th>
-      </tr>
-    ) : (
-      <tr>
-        <th>Roll No</th>
-        {dateList.map((date, id) => (
-          <th key={id}>{moment(date).format("DD MMM")}</th>
-        ))}
-      </tr>
-    );
-
   return (
-    <Base className="py-4">
+    <Base className="py-5">
       <div className="container">
-        <table className="table table-responsive text-white text-center">
-          <thead>{tableHeading()}</thead>
-          <tbody>
-            {rollNo
-              ? attRender(attendance.attendance)
-              : attendance.map((stu, id1) => (
-                  <tr key={id1}>
-                    <td>{stu.rollNo}</td>
-                    {attRender(stu.attendance)}
-                  </tr>
-                ))}
-          </tbody>
-        </table>
+        <div className="custom-table">
+          <TableHead>
+            <th className="ps-4 w-18">Roll No</th>
+            {dateList.map((date, id) => (
+              <th key={id} className="w-12">
+                {moment(date).format("DD MMM")}
+              </th>
+            ))}
+          </TableHead>
+
+          <TableBody>
+            {attendance.map((att, id) => (
+              <tr key={id}>
+                <td className="ps-4 w-18 text-warning">{att.rollNo}</td>
+                {attRender()}
+              </tr>
+            ))}
+          </TableBody>
+        </div>
       </div>
     </Base>
   );
