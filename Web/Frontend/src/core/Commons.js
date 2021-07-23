@@ -56,11 +56,12 @@ export const FormInputDiv = ({
   </div>
 );
 
-export const dates = (duration) => {
-  const start = moment().startOf(duration);
+export const dates = (duration, date) => {
+  const start = moment(date).startOf(duration);
   let list = [start.toDate()];
-  while (start.isBefore(moment().endOf(duration), "date"))
+  while (start.isBefore(moment(date).endOf(duration), "date"))
     list.push(start.add(1, "day").toDate());
+
   return list;
 };
 
