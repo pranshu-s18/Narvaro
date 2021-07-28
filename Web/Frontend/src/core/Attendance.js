@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { AiFillLeftCircle, AiFillRightCircle } from "react-icons/ai";
 import { attendanceAPI, isAuthenticated } from "../auth/helper";
 import Base from "./Base";
@@ -15,7 +15,7 @@ const Attendance = () => {
   const [attendance, setAttendance] = useState([]);
   const [date, setDate] = useState(moment().toDate());
   const [dateList, setDateList] = useState([]);
-  const { hostel } = useParams();
+  const [hostel, setHostel] = useState("BH2");
 
   useEffect(() => {
     setDateList(dates("week", date));
@@ -38,18 +38,9 @@ const Attendance = () => {
   }, [hostel, date]);
 
   const attRender = () => {
-    if (attendance) {
-      console.log(attendance);
-      let ar = new Array(7).fill(false);
-      attendance.forEach((el) => (ar[moment(el).day() - 1] = moment(el)));
-
-      return ar.map((el, i) => attCell("week", el, i));
-    } else
-      return (
-        <td colSpan={7} className="text-center text-info">
-          Loading...
-        </td>
-      );
+    let ar = new Array(7).fill(false);
+    attendance.forEach((el) => (ar[moment(el).day() - 1] = moment(el)));
+    return ar.map((el, i) => attCell("week", el, i));
   };
 
   return (
@@ -100,6 +91,11 @@ const Attendance = () => {
                 {attRender()}
               </tr>
             ))}
+            {attendance.length === 0 && (
+              <tr>
+                <td colSpan={8} className="text-center text-info">Loading...</td>
+              </tr>
+            )}
           </TableBody>
         </div>
       </div>

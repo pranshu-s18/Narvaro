@@ -5,25 +5,23 @@ import { loginAPI, auth } from "./helper";
 import Base from "../core/Base";
 
 const Login = () => {
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState(false);
   const [values, setValues] = useState({ email: "", password: "" });
   const { email, password } = values;
-
-  const [status, setStatus] = useState({ error: "", success: false });
-  const { error, success } = status;
 
   const handleChange = (field) => (event) =>
     setValues({ ...values, [field]: event.target.value });
 
   const onSubmit = (event) => {
     event.preventDefault();
-    setStatus({ ...status, error: false });
 
     loginAPI({ email, password })
       .then((data) => {
-        if (data.error) setStatus({ ...status, error: data.error.trim() });
-        else auth(data, () => setStatus({ ...status, success: true }));
+        if (data.error) setError(data.error.trim());
+        else auth(data, () => setSuccess(true));
       })
-      .catch(() => console.log("Log-in Error"));
+      .catch(() => setError("Server Error Occurred"));
   };
 
   const redirect = () => {

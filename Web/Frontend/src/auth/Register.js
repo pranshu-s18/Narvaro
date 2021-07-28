@@ -1,36 +1,49 @@
 import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
+import { Redirect } from "react-router-dom";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { registerAPI } from "./helper";
 import { Success, Error, FormInputDiv } from "../core/Commons";
 import Base from "../core/Base";
 
 const Register = () => {
-  const history = useHistory();
   const [values, setValues] = useState({
     name: "",
     email: "",
-    password: "",
+    passwordOne: "",
+    passwordTwo: "",
   });
-  const { name, email, password } = values;
+  const { name, email, passwordOne, passwordTwo } = values;
 
   const [status, setStatus] = useState({ error: false, success: false });
   const { error, success } = status;
+
+  const [visible, setVisible] = useState({ P1: false, P2: false });
+  const { P1, P2 } = visible;
 
   const handleChange = (field) => (event) =>
     setValues({ ...values, [field]: event.target.value });
 
   const onSubmit = (event) => {
     event.preventDefault();
-    registerAPI({ name, email, password })
-      .then((data) => {
-        if (data.error) setStatus({ error: data.error.trim(), success: false });
-        else {
-          setValues({ name: "", email: "", password: "" });
-          setStatus({ error: false, success: true });
-          setTimeout(() => history.push("/"), 1500);
-        }
-      })
-      .catch(() => console.log("Error in registration"));
+
+    if (passwordOne === passwordTwo) {
+      registerAPI({ name, email, passwordOne })
+        .then((data) => {
+          if (data.error)
+            setStatus({ error: data.error.trim(), success: false });
+          else {
+            setValues({
+              name: "",
+              email: "",
+              passwordOne: "",
+              passwordTwo: "",
+            });
+            setStatus({ error: false, success: true });
+            setTimeout(() => <Redirect to="/" />, 1500);
+          }
+        })
+        .catch(() => console.log("Error in registration"));
+    } else setStatus({ success: false, error: "" });
   };
 
   return (
@@ -52,13 +65,40 @@ const Register = () => {
               onChange={handleChange("email")}
               text="E-Mail ID"
             />
-            <FormInputDiv
-              id="pass"
-              val={password}
-              type="password"
-              onChange={handleChange("password")}
-              text="Password"
-            />
+            <div className="d-flex flex-row">
+              <div className="d-flex flex-fill">
+                <FormInputDiv
+                  id="pass"
+                  val={passwordOne}
+                  type={P1 ? "text" : "password"}
+                  onChange={handleChange("passwordOne")}
+                  text="Password"
+                  css="form-control mb-3 password-corners"
+                />
+                <span
+                  className="input-group-text mb-3 eye-corners"
+                  style={{ cursor: "pointer" }}
+                  onClick={() => setVisible({ ...visible, P1: !P1 })}>
+                  {P1 ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
+                </span>
+              </div>
+              <div className="d-flex flex-fill">
+                <FormInputDiv
+                  id="confirmPass"
+                  val={passwordTwo}
+                  type={P2 ? "text" : "password"}
+                  onChange={handleChange("passwordTwo")}
+                  text="Confirm Password"
+                  css="form-control mb-3 password-corners"
+                />
+                <span
+                  className="input-group-text mb-3 eye-corners"
+                  style={{ cursor: "pointer" }}
+                  onClick={() => setVisible({ ...visible, P2: !P2 })}>
+                  {P1 ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
+                </span>
+              </div>
+            </div>
             <button className="btn btn-success btn-block" onClick={onSubmit}>
               Submit
             </button>

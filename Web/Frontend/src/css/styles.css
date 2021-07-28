@@ -8,6 +8,11 @@ body {
   border-color: transparent !important;
 }
 
+.form-control:focus {
+  box-shadow: none !important;
+  border: none !important;
+}
+
 .custom-dropdown {
   position: relative;
   cursor: pointer;
@@ -46,4 +51,14 @@ body {
 
 .custom-dropdown-link:hover {
   color: #ffffff;
+}
+
+.password-corners {
+  border-top-right-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+}
+
+.eye-corners {
+  border-top-left-radius: 0 !important;
+  border-bottom-left-radius: 0 !important;
 }

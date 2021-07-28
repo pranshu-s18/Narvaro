@@ -1,0 +1,4 @@
+https://www.section.io/engineering-education/how-to-use-cors-in-nodejs-with-express/
+https://dev.to/omergulen/step-by-step-node-express-ssl-certificate-run-https-server-from-scratch-in-5-steps-5b87
+https://www.youtube.com/watch?v=oykl1Ih9pMg
+https://www.coursera.org/learn/server-side-nodejs/lecture/14M6u/exercise-video-https-and-secure-communication
