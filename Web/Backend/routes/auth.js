@@ -7,8 +7,6 @@ const { login, logout, register } = require("../controllers/auth");
 const schema = new passwordValidator()
   .is()
   .min(8)
-  .is()
-  .max(20)
   .has()
   .letters()
   .has()
@@ -28,7 +26,7 @@ router.post(
     .withMessage("Invalid value for E-Mail ID"),
   body("password")
     .custom((val) => schema.validate(val))
-    .withMessage("Password Guidelines"),
+    .withMessage("Password must be at least 8 characters long, contain at least one number and contain at least one symbol"),
   register
 );
 
