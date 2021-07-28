@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, withRouter } from "react-router-dom";
+import { Link, useLocation, withRouter } from "react-router-dom";
 import { isAuthenticated, logout } from "../auth/helper";
 import { HostelList } from "./Commons";
 
@@ -14,43 +14,48 @@ const navItem = (path, goto, name, selected = false) => (
   </li>
 );
 
-const Navbar = ({ location }) => (
-  <div>
-    <ul className="nav nav-tabs bg-dark">
-      {isAuthenticated() ? (
-        <>
-          {navItem(location.pathname, "/attendance", "Attendance", true)}
-          <li className="nav-item" onClick={logout}>
-            <Link className="nav-link p-3 text-white" to="/">
-              Logout
-            </Link>
-          </li>
-          <li className="nav-item custom-dropdown ms-auto">
-            <button className="nav-link text-white p-3">Hostel</button>
-            <ul className="custom-dropdown-menu bg-dark">
-              {HostelList.map((hostel, i) => {
-                const goto = `/attendance/${hostel}`;
-                const selected = location.pathname === goto ? "selected" : "";
-                return (
-                  <Link
-                    key={i}
-                    className={`nav-link custom-dropdown-link ${selected}`}
-                    to={goto}>
-                    {hostel}
-                  </Link>
-                );
-              })}
-            </ul>
-          </li>
-        </>
-      ) : (
-        <>
-          {navItem(location.pathname, "/", "Login")}
-          {navItem(location.pathname, "/register", "Register")}
-        </>
-      )}
-    </ul>
-  </div>
-);
+const Navbar = () => {
+  const location = useLocation();
+  const curHostel =
+    location.state && location.state.hostel ? location.state.hostel : "Hostel";
+
+  return (
+    <div>
+      <ul className="nav nav-tabs bg-dark">
+        {isAuthenticated() ? (
+          <>
+            {navItem(location.pathname, "/attendance", "Attendance", true)}
+            <li className="nav-item" onClick={logout}>
+              <Link className="nav-link p-3 text-white" to="/">
+                Logout
+              </Link>
+            </li>
+            <li className="nav-item custom-dropdown ms-auto">
+              <button className="nav-link text-white p-3">{curHostel}</button>
+              <ul className="custom-dropdown-menu bg-dark">
+                {HostelList.map((hostel, i) => {
+                  const selected = curHostel === hostel ? "selected" : "";
+                  return (
+                    <Link
+                      key={i}
+                      className={`nav-link custom-dropdown-link ${selected}`}
+                      to={{ pathname: "/attendance", state: { hostel } }}>
+                      {hostel}
+                    </Link>
+                  );
+                })}
+              </ul>
+            </li>
+          </>
+        ) : (
+          <>
+            {navItem(location.pathname, "/", "Login")}
+            {navItem(location.pathname, "/register", "Register")}
+          </>
+        )}
+      </ul>
+    </div>
+  );
+};
 
 export default withRouter(Navbar);

@@ -12,8 +12,8 @@ export const Error = ({ error }) =>
   error && (
     <div className="row mt-3 text-center">
       <div className="alert-danger rounded py-2">
-        {error.split("\n").map((str) => (
-          <span>
+        {error.split("\n").map((str, i) => (
+          <span key={i}>
             {str}
             <br />
           </span>
@@ -70,11 +70,11 @@ export const attCell = (duration, element, id) => {
   const comp = duration === "week" ? moment().day() : moment().date();
 
   return (
-    <td className={cls}>
+    <td className={cls} key={id}>
       {id >= comp ? (
         <b>-</b>
       ) : element ? (
-        <span className="text-info">{element.format("hh:mm A")}</span>
+        <span className="text-info">{moment(element).format("hh:mm A")}</span>
       ) : (
         <span className="text-danger">A</span>
       )}

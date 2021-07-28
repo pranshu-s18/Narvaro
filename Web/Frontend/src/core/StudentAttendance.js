@@ -19,9 +19,9 @@ const StudentAttendance = () => {
 
   useEffect(() => {
     const data = {
-      rollNo: rollNo,
-      startDate: date.startOf("month").toDate(),
-      endDate: date.endOf("month").toDate(),
+      rollNo,
+      startDate: date.startOf("month").toISOString(),
+      endDate: date.endOf("month").toISOString(),
     };
 
     attendanceAPI(user._id, token, JSON.stringify(data)).then((res) => {

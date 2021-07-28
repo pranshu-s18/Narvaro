@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Redirect } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Redirect, useLocation } from "react-router-dom";
 import { Error, FormInputDiv } from "../core/Commons";
 import { loginAPI, auth } from "./helper";
 import Base from "../core/Base";
@@ -9,6 +9,12 @@ const Login = () => {
   const [success, setSuccess] = useState(false);
   const [values, setValues] = useState({ email: "", password: "" });
   const { email, password } = values;
+
+  const location = useLocation();
+  useEffect(() => {
+    if (location.state !== undefined)
+      setValues({ email: location.state.email, password: "" });
+  }, [location]);
 
   const handleChange = (field) => (event) =>
     setValues({ ...values, [field]: event.target.value });
@@ -37,7 +43,7 @@ const Login = () => {
               id="email"
               val={email}
               type="email"
-              focus={true}
+              focus={location.state === undefined}
               onChange={handleChange("email")}
               text="E-Mail ID"
             />
@@ -46,6 +52,7 @@ const Login = () => {
               id="pass"
               val={password}
               type="password"
+              focus={location.state !== undefined}
               onChange={handleChange("password")}
               text="Password"
             />

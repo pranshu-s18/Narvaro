@@ -10,7 +10,7 @@ body {
 
 .form-control:focus {
   box-shadow: none !important;
-  border: none !important;
+  border-color: white !important;
 }
 
 .custom-dropdown {
@@ -53,12 +53,16 @@ body {
   color: #ffffff;
 }
 
-.password-corners {
+.left-rounded-corners {
   border-top-right-radius: 0 !important;
   border-bottom-right-radius: 0 !important;
 }
 
-.eye-corners {
+.right-rounded-corners {
   border-top-left-radius: 0 !important;
   border-bottom-left-radius: 0 !important;
+}
+
+.d-flex .form-floating {
+  width: 100%;
 }

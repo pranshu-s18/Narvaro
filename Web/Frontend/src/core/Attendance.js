@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { AiFillLeftCircle, AiFillRightCircle } from "react-icons/ai";
 import { attendanceAPI, isAuthenticated } from "../auth/helper";
 import Base from "./Base";
@@ -15,18 +15,30 @@ const Attendance = () => {
   const [attendance, setAttendance] = useState([]);
   const [date, setDate] = useState(moment().toDate());
   const [dateList, setDateList] = useState([]);
-  const [hostel, setHostel] = useState("BH2");
+
+  const location = useLocation();
+  const hostel = location.state ? location.state.hostel : "BH2";
+
+  const [status, setStatus] = useState({
+    loading: true,
+    error: { text: "", server: false },
+  });
+  const {
+    loading,
+    error: { text, server },
+  } = status;
 
   useEffect(() => {
     setDateList(dates("week", date));
   }, [date]);
 
   useEffect(() => {
+    setStatus({ loading: true, error: false });
     let queryDate = moment(date);
     const data = {
       hostel,
-      startDate: queryDate.startOf("week").toDate(),
-      endDate: queryDate.endOf("week").toDate(),
+      startDate: queryDate.startOf("week").toISOString(),
+      endDate: queryDate.endOf("week").toISOString(),
     };
 
     attendanceAPI(user._id, token, JSON.stringify(data)).then((res) => {
@@ -39,7 +51,9 @@ const Attendance = () => {
 
   const attRender = () => {
     let ar = new Array(7).fill(false);
-    attendance.forEach((el) => (ar[moment(el).day() - 1] = moment(el)));
+    attendance.forEach((att) =>
+      att.attendance.forEach((el) => (ar[moment(el).day() - 1] = el))
+    );
     return ar.map((el, i) => attCell("week", el, i));
   };
 
@@ -52,9 +66,12 @@ const Attendance = () => {
               <span
                 className="float-start ps-1 pe-4"
                 style={{ cursor: "pointer" }}
-                onClick={() =>
-                  setDate(moment(date).subtract(1, "week").toDate())
-                }>
+                onClick={() => {
+                  let stw = moment().startOf("month").startOf("week"),
+                    enw = moment().startOf("month").endOf("week");
+                  if (!moment(date).isBetween(stw, enw))
+                    setDate(moment(date).subtract(1, "week").toDate());
+                }}>
                 <AiFillLeftCircle />
               </span>
               Roll No
@@ -66,9 +83,15 @@ const Attendance = () => {
                   <span
                     className="float-end px-1"
                     style={{ cursor: "pointer" }}
-                    onClick={() =>
-                      setDate(moment(date).add(1, "week").toDate())
-                    }>
+                    onClick={() => {
+                      if (
+                        !moment(date).isBetween(
+                          moment().startOf("week"),
+                          moment().endOf("week")
+                        )
+                      )
+                        setDate(moment(date).add(1, "week").toDate());
+                    }}>
                     <AiFillRightCircle />
                   </span>
                 ) : (
@@ -93,7 +116,9 @@ const Attendance = () => {
             ))}
             {attendance.length === 0 && (
               <tr>
-                <td colSpan={8} className="text-center text-info">Loading...</td>
+                <td colSpan={8} className="text-center text-info">
+                  Loading...
+                </td>
               </tr>
             )}
           </TableBody>
