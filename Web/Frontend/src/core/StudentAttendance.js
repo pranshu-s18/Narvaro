@@ -13,20 +13,38 @@ moment.updateLocale("en-in", { week: { dow: 1 } });
 const StudentAttendance = () => {
   const { user, token } = isAuthenticated();
   const [attendance, setAttendance] = useState([]);
-  const [date, setDate] = useState(moment());
+  const [date, setDate] = useState(moment().startOf("month").toDate());
   const [dateList, setDateList] = useState([]);
   const { rollNo } = useParams();
 
+  const [status, setStatus] = useState({
+    loading: true,
+    error: "",
+    server: false,
+  });
+  const { loading, error, server } = status;
+
   useEffect(() => {
+    setStatus({ loading: true, error: "", server: false });
+    let queryDate = moment(date);
     const data = {
       rollNo,
-      startDate: date.startOf("month").toISOString(),
-      endDate: date.endOf("month").toISOString(),
+      startDate: queryDate.toISOString(),
+      endDate: queryDate.endOf("month").toISOString(),
     };
 
     attendanceAPI(user._id, token, JSON.stringify(data)).then((res) => {
-      if (res.error) console.log(res.error);
-      else setAttendance(res[0]);
+      if (res.error) {
+        setStatus({
+          loading: false,
+          error: res.error,
+          server: res.server,
+        });
+        setAttendance([]);
+      } else {
+        setStatus({ loading: false, error: "", server: false });
+        setAttendance(res[0]);
+      }
     });
 
     setDateList(dates("month", date));
@@ -64,14 +82,13 @@ const StudentAttendance = () => {
             </tr>
           );
         });
-    } else
-      return (
-        <tr>
-          <td colSpan={2} className="w-100">
-            Loading...
-          </td>
-        </tr>
-      );
+    }
+  };
+
+  const heading = (data) => {
+    if (loading) return "Loading...";
+    else if (error) return server ? "Error" : moment(date).format("MMMM YYYY");
+    else return data;
   };
 
   return (
@@ -81,23 +98,51 @@ const StudentAttendance = () => {
           <TableHead>
             <th className="ps-4 w-50">
               <span
-                className="float-start px-1"
-                onClick={() => setDate(date.subtract(1, "month"))}>
+                className="float-start mx-1"
+                style={{ cursor: "pointer" }}
+                onClick={() => {
+                  if (!moment(date).isSame(moment().startOf("year")))
+                    setDate(moment(date).subtract(1, "month").toDate());
+                }}>
                 <AiFillLeftCircle />
               </span>
               {rollNo}
             </th>
             <th className="w-50 pe-4">
-              {attendance.hostel}
+              {heading(attendance.hostel)}
               <span
-                className="float-end px-1"
-                onClick={() => setDate(date.add(1, "month"))}>
+                className="float-end mx-1"
+                style={{ cursor: "pointer" }}
+                onClick={() => {
+                  if (!moment(date).isSame(moment().startOf("month")))
+                    setDate(moment(date).add(1, "month").toDate());
+                }}>
                 <AiFillRightCircle />
               </span>
             </th>
           </TableHead>
 
-          <TableBody>{attRender(attendance.attendance)}</TableBody>
+          <TableBody>
+            {attRender(attendance.attendance)}
+            {loading && (
+              <tr>
+                <td colSpan={2} className="text-center text-info">
+                  Loading...
+                </td>
+              </tr>
+            )}
+            {error && (
+              <tr>
+                <td
+                  colSpan={2}
+                  className={`text-center ${
+                    server ? "text-danger" : "text-info"
+                  }`}>
+                  {error}
+                </td>
+              </tr>
+            )}
+          </TableBody>
         </div>
       </div>
     </Base>

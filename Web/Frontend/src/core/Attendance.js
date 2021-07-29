@@ -13,7 +13,7 @@ moment.updateLocale("en-in", { week: { dow: 1 } });
 const Attendance = () => {
   const { user, token } = isAuthenticated();
   const [attendance, setAttendance] = useState([]);
-  const [date, setDate] = useState(moment().toDate());
+  const [date, setDate] = useState(moment().startOf("week").toDate());
   const [dateList, setDateList] = useState([]);
 
   const location = useLocation();
@@ -21,31 +21,36 @@ const Attendance = () => {
 
   const [status, setStatus] = useState({
     loading: true,
-    error: { text: "", server: false },
+    error: "",
+    server: false,
   });
-  const {
-    loading,
-    error: { text, server },
-  } = status;
+  const { loading, error, server } = status;
 
   useEffect(() => {
     setDateList(dates("week", date));
   }, [date]);
 
   useEffect(() => {
-    setStatus({ loading: true, error: false });
+    setStatus({ loading: true, error: "", server: false });
     let queryDate = moment(date);
     const data = {
       hostel,
-      startDate: queryDate.startOf("week").toISOString(),
+      startDate: queryDate.toISOString(),
       endDate: queryDate.endOf("week").toISOString(),
     };
 
     attendanceAPI(user._id, token, JSON.stringify(data)).then((res) => {
       if (res.error) {
-        console.log(res.error);
+        setStatus({
+          loading: false,
+          error: res.error,
+          server: res.server,
+        });
         setAttendance([]);
-      } else setAttendance(res);
+      } else {
+        setStatus({ loading: false, error: "", server: false });
+        setAttendance(res);
+      }
     });
   }, [hostel, date]);
 
@@ -67,9 +72,7 @@ const Attendance = () => {
                 className="float-start ps-1 pe-4"
                 style={{ cursor: "pointer" }}
                 onClick={() => {
-                  let stw = moment().startOf("month").startOf("week"),
-                    enw = moment().startOf("month").endOf("week");
-                  if (!moment(date).isBetween(stw, enw))
+                  if (!moment(date).isSame(moment().startOf("month").startOf("week")))
                     setDate(moment(date).subtract(1, "week").toDate());
                 }}>
                 <AiFillLeftCircle />
@@ -84,12 +87,7 @@ const Attendance = () => {
                     className="float-end px-1"
                     style={{ cursor: "pointer" }}
                     onClick={() => {
-                      if (
-                        !moment(date).isBetween(
-                          moment().startOf("week"),
-                          moment().endOf("week")
-                        )
-                      )
+                      if (!moment(date).isSame(moment().startOf("week")))
                         setDate(moment(date).add(1, "week").toDate());
                     }}>
                     <AiFillRightCircle />
@@ -107,17 +105,28 @@ const Attendance = () => {
                 <td className="ps-4 w-18">
                   <Link
                     className="text-decoration-none text-warning"
-                    to={`/attendance/student/${att.rollNo}`}>
+                    to={`/attendance/${att.rollNo}`}>
                     {att.rollNo}
                   </Link>
                 </td>
                 {attRender()}
               </tr>
             ))}
-            {attendance.length === 0 && (
+            {loading && (
               <tr>
                 <td colSpan={8} className="text-center text-info">
                   Loading...
+                </td>
+              </tr>
+            )}
+            {error && (
+              <tr>
+                <td
+                  colSpan={8}
+                  className={`text-center ${
+                    server ? "text-danger" : "text-info"
+                  }`}>
+                  {error}
                 </td>
               </tr>
             )}
