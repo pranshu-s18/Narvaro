@@ -5,7 +5,7 @@ import moment from "moment";
 import "moment/locale/en-in";
 moment.updateLocale("en-in", { week: { dow: 1 } });
 
-export const API = "http://localhost:8000/api";
+export const API = "/api";
 export const HostelList = ["BH1", "BH2", "BH3", "GH"];
 
 export const Error = ({ error }) =>
