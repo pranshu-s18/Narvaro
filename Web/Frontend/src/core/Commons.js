@@ -5,8 +5,8 @@ import moment from "moment";
 import "moment/locale/en-in";
 moment.updateLocale("en-in", { week: { dow: 1 } });
 
-export const API = "http://localhost:8000/api";
-export const HostelList = ["BH1", "BH2", "BH3", "GH"];
+export const API = "/api";
+export const HostelList = ["BH1", "BH2", "BH3", "GH", "Test"];
 
 export const Error = ({ error }) =>
   error && (
@@ -65,22 +65,19 @@ export const dates = (duration, date) => {
   return list;
 };
 
-export const attCell = (duration, element, id) => {
-  const cls = duration === "week" ? "w-12" : "w-25";
-  const comp = duration === "week" ? moment().day() : moment().date();
-
-  return (
-    <td className={cls} key={id}>
-      {id >= comp ? (
-        <b>-</b>
-      ) : element ? (
-        <span className="text-info">{moment(element).format("hh:mm A")}</span>
-      ) : (
-        <span className="text-danger">A</span>
-      )}
-    </td>
-  );
-};
+export const attCell = (duration, element, id) => (
+  <td className={duration === "week" ? "w-12" : "w-25"} key={id}>
+    {moment(element.date).isAfter(moment(), "day") ? (
+      <b>-</b>
+    ) : element.value ? (
+      <span className="text-info">
+        {moment(element.value).format("hh:mm A")}
+      </span>
+    ) : (
+      <span className="text-danger">A</span>
+    )}
+  </td>
+);
 
 export const TableHead = ({ children }) => (
   <table className="table table-borderless mb-0">

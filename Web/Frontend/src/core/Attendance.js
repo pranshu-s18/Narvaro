@@ -55,9 +55,9 @@ const Attendance = () => {
   }, [hostel, date]);
 
   const attRender = () => {
-    let ar = new Array(7).fill(false);
+    let ar = dateList.map((dt) => ({ date: dt, value: false }));
     attendance.forEach((att) =>
-      att.attendance.forEach((el) => (ar[moment(el).day() - 1] = el))
+      att.attendance.forEach((el) => (ar[moment(el).day() - 1].value = el))
     );
     return ar.map((el, i) => attCell("week", el, i));
   };
@@ -72,7 +72,11 @@ const Attendance = () => {
                 className="float-start ps-1 pe-4"
                 style={{ cursor: "pointer" }}
                 onClick={() => {
-                  if (!moment(date).isSame(moment().startOf("month").startOf("week")))
+                  if (
+                    !moment(date).isSame(
+                      moment().startOf("month").startOf("week")
+                    )
+                  )
                     setDate(moment(date).subtract(1, "week").toDate());
                 }}>
                 <AiFillLeftCircle />

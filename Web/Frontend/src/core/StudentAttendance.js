@@ -52,8 +52,8 @@ const StudentAttendance = () => {
 
   const attRender = (data) => {
     if (data) {
-      let ar = new Array(dateList.length).fill(false);
-      data.forEach((el) => (ar[moment(el).date() - 1] = moment(el)));
+      let ar = dateList.map((dt) => ({ date: dt, value: false }));
+      data.forEach((el) => (ar[moment(el).date() - 1].value = moment(el)));
 
       const day = (date, i) => (
         <>

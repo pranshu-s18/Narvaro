@@ -1,6 +1,6 @@
 {
   "name": "narvaro",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "dependencies": {
     "moment": "^2.29.1",
@@ -9,8 +9,7 @@
     "react-icons": "^4.2.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
-    "simplebar-react": "^2.3.5",
-    "web-vitals": "^1.1.2"
+    "simplebar-react": "^2.3.5"
   },
   "scripts": {
     "start": "react-scripts start",

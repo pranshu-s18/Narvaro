@@ -17,7 +17,7 @@ const navItem = (path, goto, name, selected = false) => (
 const Navbar = () => {
   const location = useLocation();
   const curHostel =
-    location.state && location.state.hostel ? location.state.hostel : "Hostel";
+    location.state && location.state.hostel ? location.state.hostel : "BH2";
 
   return (
     <div>
