@@ -36,7 +36,7 @@ exports.login = (req, res) => {
       } else if (!user || !user.auth(password))
         return res.status(401).json({ error: "Invalid email or password" });
       else {
-        const token = jwt.sign({ _id: user._id }, process.env.key);
+        const token = jwt.sign({ _id: user._id }, process.env.NODE_KEY);
         res.cookie("token", token, { maxAge: 600000 }); // 10 min
 
         const { _id, name, email } = user;
@@ -56,7 +56,7 @@ exports.logout = (req, res) => {
 };
 
 exports.isLoggedIn = expressJwt({
-  secret: process.env.key,
+  secret: process.env.NODE_KEY,
   userProperty: "auth",
   algorithms: ["HS256"],
 });
