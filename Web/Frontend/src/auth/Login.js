@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Redirect, useLocation } from "react-router-dom";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { Error, FormInputDiv } from "../core/Commons";
 import { loginAPI, auth } from "./helper";
 import Base from "../core/Base";
@@ -7,6 +8,7 @@ import Base from "../core/Base";
 const Login = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
+  const [visible, setVisible] = useState(false);
   const [values, setValues] = useState({ email: "", password: "" });
   const { email, password } = values;
 
@@ -48,14 +50,25 @@ const Login = () => {
               text="E-Mail ID"
             />
 
-            <FormInputDiv
-              id="pass"
-              val={password}
-              type="password"
-              focus={location.state !== undefined}
-              onChange={handleChange("password")}
-              text="Password"
-            />
+            <div className="d-flex flex-row">
+              <div className="d-flex flex-fill">
+                <FormInputDiv
+                  id="pass"
+                  val={password}
+                  type={visible ? "text" : "password"}
+                  focus={location.state !== undefined}
+                  onChange={handleChange("password")}
+                  text="Password"
+                  css="form-control mb-3 left-rounded-corners"
+                />
+                <span
+                  className="input-group-text mb-3 right-rounded-corners"
+                  style={{ cursor: "pointer" }}
+                  onClick={() => setVisible(!visible)}>
+                  {visible ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
+                </span>
+              </div>
+            </div>
 
             <button className="btn btn-success btn-block" onClick={onSubmit}>
               Submit

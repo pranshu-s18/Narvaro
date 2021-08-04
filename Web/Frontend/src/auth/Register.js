@@ -100,7 +100,7 @@ const Register = () => {
                   className="input-group-text mb-3 right-rounded-corners"
                   style={{ cursor: "pointer" }}
                   onClick={() => setVisible({ ...visible, P2: !P2 })}>
-                  {P1 ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
+                  {P2 ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
                 </span>
               </div>
             </div>
