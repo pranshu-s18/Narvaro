@@ -1,20 +1,19 @@
 <resources>
     <string name="app_name">Närvaro</string>
-    <string name="caption">You are signed in as</string>
-    <string name="location">Get Location</string>
-    <string name="coordinates">You are at %f, %f\nWithin 50m -> %s</string>
+    <string name="caption">Signed in as</string>
+    <string name="attendance">Mark Attendance</string>
+    <string name="not_within_radius">You are not within the hostel boundaries</string>
     <string name="loading">Getting Location…</string>
     <string name="permission_denied">Permission to Access Location was Denied</string>
 
     <!-- Preference Titles -->
     <string name="settings">Settings</string>
-    <string name="GPS">Use GPS</string>
-    <string name="usingNetwork">Currently using Wi-Fi, Mobile Networks and other Sensors to estimate Device\'s Location</string>
-    <string name="usingGPS">Currently using GPS to estimate Device\'s Location</string>
     <string name="hostel">Choose your Hostel</string>
 
     <!-- Fingerprint Messages -->
     <string name="F_Cancel">Fingerprint Authentication Cancelled by User</string>
     <string name="F_Lock">Too many Attempts. Try Again Later.</string>
     <string name="F_Error">Error occurred in Fingerprint Scan</string>
+
+    <string name="URL">https://narvaro.tech/app/attendance</string>
 </resources>

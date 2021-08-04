@@ -11,7 +11,6 @@ import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,7 +20,12 @@ import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceManager
+import com.android.volley.Response
+import com.android.volley.toolbox.StringRequest
+import com.android.volley.toolbox.Volley
 import com.google.firebase.auth.FirebaseAuth
+import org.json.JSONObject
+
 
 class Attendance : Fragment() {
     private var _binding: FragmentAttendanceBinding? = null
@@ -40,9 +44,7 @@ class Attendance : Fragment() {
         auth = FirebaseAuth.getInstance()
         lm = requireActivity().getSystemService(Context.LOCATION_SERVICE) as LocationManager
         hostel = PreferenceManager.getDefaultSharedPreferences(requireContext())
-            .getString("hostel", "test")!!
-
-        Log.d(MainActivity.TAG, auth.currentUser!!.uid)
+            .getString("hostel", "Test")!!
     }
 
     override fun onCreateView(
@@ -64,14 +66,40 @@ class Attendance : Fragment() {
                 else -> 0
             }
 
-            val tf = if (location.distanceTo(loc[x]) < 50.0f) "Yes" else "No"
-            binding.currentLocation.text =
-                getString(R.string.coordinates, location.latitude, location.longitude, tf)
+            if (location.distanceTo(loc[x]) < 50.0f) {
+                val stringRequest: StringRequest =
+                    object : StringRequest(Method.POST, getString(R.string.URL),
+                        Response.Listener { response ->
+                            val res = JSONObject(response)
+                            binding.status.text = res["message"].toString()
+                        },
+                        Response.ErrorListener { e ->
+                            val err = JSONObject(String(e.networkResponse.data))
+                            binding.status.text = err["error"].toString()
+                        }) {
+                        override fun getBodyContentType(): String {
+                            return "application/json"
+                        }
+
+                        override fun getBody(): ByteArray {
+                            val body = HashMap<String, String>()
+                            body["hostel"] = hostel
+                            body["uid"] = auth.currentUser!!.uid
+                            return JSONObject(body as Map<String, String>).toString().toByteArray()
+                        }
+                    }
+                val requestQueue = Volley.newRequestQueue(requireContext())
+                requestQueue.add(stringRequest)
+            } else binding.status.text = getString(R.string.not_within_radius)
         }
 
         binding.email.text = auth.currentUser!!.displayName
         binding.settingsBtn.setOnClickListener { findNavController().navigate(R.id.settings) }
-        binding.location.setOnClickListener { getLocation() }
+        binding.location.setOnClickListener {
+            hostel = PreferenceManager.getDefaultSharedPreferences(requireContext())
+                .getString("hostel", "Test")!!
+            getLocation()
+        }
     }
 
     override fun onPause() {
@@ -100,12 +128,12 @@ class Attendance : Fragment() {
         if (!checkPermission()) {
             val providers = lm.getProviders(true)
             if (providers.isNotEmpty()) {
-                binding.currentLocation.text = getString(R.string.loading)
+                binding.status.text = getString(R.string.loading)
 
                 if (providers.contains(LocationManager.NETWORK_PROVIDER)) {
                     lm.requestLocationUpdates(
                         LocationManager.NETWORK_PROVIDER,
-                        0L,
+                        1000L,
                         0f,
                         locationListener
                     )
