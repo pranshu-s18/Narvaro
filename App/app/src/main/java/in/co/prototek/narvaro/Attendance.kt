@@ -72,10 +72,12 @@ class Attendance : Fragment() {
                         Response.Listener { response ->
                             val res = JSONObject(response)
                             binding.status.text = res["message"].toString()
+                            lm.removeUpdates(locationListener)
                         },
                         Response.ErrorListener { e ->
-                            val err = JSONObject(String(e.networkResponse.data))
-                            binding.status.text = err["error"].toString()
+                            val err = JSONObject(String(e.networkResponse.data))["error"].toString()
+                            if(err == getString(R.string.server_error) || err == getString(R.string.already_marked)) lm.removeUpdates(locationListener)
+                            binding.status.text = err
                         }) {
                         override fun getBodyContentType(): String {
                             return "application/json"

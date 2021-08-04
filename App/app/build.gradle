@@ -13,8 +13,8 @@ android {
         applicationId "in.co.prototek.narvaro"
         minSdkVersion 23
         targetSdkVersion 30
-        versionCode 6
-        versionName "1.5"
+        versionCode 7
+        versionName "1.5.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

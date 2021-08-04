@@ -15,5 +15,8 @@
     <string name="F_Lock">Too many Attempts. Try Again Later.</string>
     <string name="F_Error">Error occurred in Fingerprint Scan</string>
 
+    <!-- API -->
     <string name="URL">https://narvaro.tech/app/attendance</string>
+    <string name="already_marked">Attendance already marked for Today</string>
+    <string name="server_error">Server error occurred</string>
 </resources>
