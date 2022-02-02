@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="hostel_entries">
+        <item>Test Location</item>
+        <item>Boys Hostel 1</item>
+        <item>Boys Hostel 2</item>
+        <item>Boys Hostel 3</item>
+        <item>Girls Hostel</item>
+    </string-array>
+
+    <string-array name="hostel_values">
+        <item>Test</item>
+        <item>BH1</item>
+        <item>BH2</item>
+        <item>BH3</item>
+        <item>GH</item>
+    </string-array>
+</resources>
