@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "385179672089",
+    "project_id": "iiitm-hostel-attendance",
+    "storage_bucket": "iiitm-hostel-attendance.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:385179672089:android:a999e1649592b120709488",
+        "android_client_info": {
+          "package_name": "in.co.prototek.narvaro"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "385179672089-sv04tgkgu4588vs36u5gmc89b4q8sbgl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "in.co.prototek.narvaro",
+            "certificate_hash": "f821d050369f9d216d60e0103e20eb52d14929cc"
+          }
+        },
+        {
+          "client_id": "385179672089-d4cqalsvdp4uic1flst1au2mimcl612f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBcryu-6OyiwX4MSoCdxrCHGs2P7KkSAzw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "385179672089-d4cqalsvdp4uic1flst1au2mimcl612f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
