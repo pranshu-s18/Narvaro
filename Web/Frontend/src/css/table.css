@@ -1,0 +1,50 @@
+@import url("https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap");
+
+.custom-table {
+  width: 100%;
+  font-family: "Lato", sans-serif;
+  text-transform: uppercase;
+}
+
+.custom-table-small {
+  width: 80%;
+  font-family: "Lato", sans-serif;
+  text-transform: uppercase;
+}
+
+.head {
+  background-color: #3c3c3c;
+  color: #2ecc72;
+}
+
+.head th {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+.body {
+  background-color: #222222;
+  color: #808080;
+}
+
+.body td {
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+}
+
+.w-18 {
+  width: 18%;
+  min-width: 18%;
+  max-width: 18%;
+}
+
+.w-12 {
+  width: 12%;
+  min-width: 12%;
+  max-width: 12%;
+}
+
+.simplebar-track.simplebar-vertical {
+  top: 5px !important;
+  height: calc(100% - 10px);
+}
